@@ -229,3 +229,152 @@ Response:
 - **PDF** — via PyPDF2
 - **DOCX** — via python-docx
 - **TXT** — plain text fallback
+
+#  Serenity — AI Mental Health Support Chatbot
+
+##  Project Overview
+
+**Serenity** is a beautifully designed AI-powered mental health support chatbot that provides a safe, calming, and non-judgmental space for users to share their thoughts and emotions.
+
+The application focuses on **empathetic conversations, emotional support, and gentle coping strategies** through an interactive chat interface.
+
+---
+
+##  Objectives
+
+* Provide a supportive environment for mental well-being
+* Enable users to express feelings freely
+* Offer coping techniques like breathing and grounding exercises
+* Promote awareness of mental health support resources
+
+---
+
+##  Features
+
+###  Interactive Chat Interface
+
+* Real-time conversation UI
+* Smooth message animations
+* Typing indicator
+
+###  Emotion-Based Quick Responses
+
+* Mood selection chips (Anxious, Sad, Stressed, Lonely, etc.)
+* Quick reply suggestions
+
+###  AI-Powered Conversations
+
+* Uses API-based AI responses
+* Empathetic and human-like interaction
+
+###  Crisis Support Integration
+
+* Displays **988 Suicide & Crisis Lifeline**
+* Emergency resources included
+
+###  Modern UI/UX Design
+
+* Soft calming color palette
+* Responsive layout
+* Glassmorphism & subtle animations
+
+###  Disclaimer Modal
+
+* Ensures users understand limitations
+* Encourages professional help
+
+---
+
+##  Technologies Used
+
+* HTML5
+* CSS3 (Custom styling + animations)
+* JavaScript (Vanilla JS)
+* AI API Integration (Claude / Anthropic API)
+
+---
+
+##  Project Structure
+
+Serenity-Chatbot
+│
+├── index.html
+├── README.md
+└── assets (optional for icons/images)
+
+---
+
+##  How to Run the Project
+
+1. Clone the repository
+2. Open the project folder
+3. Open `index.html` in your browser
+
+```bash
+git clone https://github.com/your-username/serenity-chatbot.git
+cd serenity-chatbot
+```
+
+---
+
+##  API Setup (Important)
+
+This project uses an AI API for chatbot responses.
+
+ Replace the API request section with your API key:
+
+```javascript
+headers: {
+  "Content-Type": "application/json",
+  "x-api-key": "YOUR_API_KEY"
+}
+```
+
+⚠ Never expose API keys publicly in GitHub.
+
+---
+
+##  How It Works
+
+1. User enters a message
+2. Message is sent to AI API
+3. AI generates a response
+4. Response is displayed with typing animation
+5. Chat history is maintained
+
+---
+
+##  Use Cases
+
+* Mental health support companion
+* Safe space for emotional expression
+* UI/UX showcase project
+* AI chatbot demonstration
+
+---
+
+##  Future Improvements
+
+* Add voice input/output
+* Store chat history in database
+* Multi-language support
+* Therapist/helpline integration by location
+* Deploy as a web application
+
+---
+
+##  Disclaimer
+
+Serenity is **not a licensed therapist** and does not replace professional mental health care.
+For emergencies, please contact:
+
+📞 Call or text **988** (USA)
+🌍 International: https://www.findahelpline.com
+
+---
+##  Acknowledgment
+
+This project was built to promote **mental well-being through technology** and create a compassionate digital experience.
+
+---
+
