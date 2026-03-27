@@ -65,9 +65,9 @@ The model mainly uses the **Close price** for prediction.
 
 ##  Results
 
-* ✔ Next Day Predicted Price
-* ✔ Actual vs Predicted Graph
-* ✔ Model Evaluation Metrics
+*  Next Day Predicted Price
+*  Actual vs Predicted Graph
+*  Model Evaluation Metrics
 
 ### Metrics Used:
 
