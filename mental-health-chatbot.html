@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serenity — Mental Health Support</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0eb;
+    --bg2: #ede7df;
+    --surface: #faf8f5;
+    --surface2: #f0ebe4;
+    --border: #ddd6cc;
+    --sage: #7a9e87;
+    --sage-light: #a8c4b0;
+    --sage-dark: #5a7a67;
+    --warm: #c4956a;
+    --warm-light: #ddb898;
+    --text: #3a3330;
+    --text-mid: #6b5f58;
+    --text-muted: #a09590;
+    --user-bg: #e8e0f5;
+    --user-border: #c9bde8;
+    --shadow: rgba(58, 51, 48, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Soft radial background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(168, 196, 176, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: -5%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(196, 149, 106, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 18px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 12px var(--shadow);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--sage-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(122, 158, 135, 0.35);
+  }
+
+  .brand-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+    opacity: 0.95;
+  }
+
+  .brand-text .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
+
+  .brand-text .tagline {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .online-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 5px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .online-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--sage);
+    border-radius: 50%;
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+  }
+
+  /* Crisis banner */
+  .crisis-bar {
+    background: linear-gradient(90deg, rgba(122,158,135,0.12), rgba(196,149,106,0.1));
+    border-bottom: 1px solid var(--border);
+    padding: 8px 32px;
+    font-size: 11.5px;
+    color: var(--text-mid);
+    text-align: center;
+    letter-spacing: 0.03em;
+    position: relative;
+    z-index: 10;
+  }
+
+  .crisis-bar a {
+    color: var(--sage-dark);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid var(--sage-light);
+  }
+
+  /* Messages area */
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+    scroll-behavior: smooth;
+  }
+
+  .messages-wrap::-webkit-scrollbar { width: 4px; }
+  .messages-wrap::-webkit-scrollbar-track { background: transparent; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Welcome */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    gap: 14px;
+    animation: fadeUp 0.6s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-bloom {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage-light), var(--sage));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(122,158,135,0.3), 0 0 0 12px rgba(122,158,135,0.08);
+    margin-bottom: 8px;
+  }
+
+  .welcome-bloom svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+  }
+
+  .welcome h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .welcome p {
+    color: var(--text-mid);
+    font-size: 14px;
+    line-height: 1.75;
+    max-width: 420px;
+  }
+
+  .mood-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 6px;
+  }
+
+  .mood-chip {
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    font-size: 12.5px;
+    color: var(--text-mid);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .mood-chip:hover {
+    border-color: var(--sage);
+    color: var(--sage-dark);
+    background: rgba(122,158,135,0.07);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(122,158,135,0.15);
+  }
+
+  /* Messages */
+  .message {
+    display: flex;
+    gap: 12px;
+    max-width: 720px;
+    animation: msgIn 0.3s ease;
+  }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user {
+    flex-direction: row-reverse;
+    margin-left: auto;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .avatar.bot {
+    background: linear-gradient(135deg, var(--sage), var(--sage-light));
+    box-shadow: 0 2px 10px rgba(122,158,135,0.3);
+  }
+
+  .avatar.bot svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+
+  .avatar.user {
+    background: linear-gradient(135deg, #9b84c8, #b8a4d8);
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(155,132,200,0.3);
+  }
+
+  .bubble-wrap { display: flex; flex-direction: column; gap: 3px; max-width: calc(100% - 50px); }
+
+  .sender-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 0 4px;
+  }
+
+  .message.bot .sender-label { color: var(--sage-dark); }
+  .message.user .sender-label { text-align: right; color: #9b84c8; }
+
+  .bubble {
+    padding: 13px 17px;
+    border-radius: 18px;
+    line-height: 1.7;
+    font-size: 14px;
+    position: relative;
+  }
+
+  .message.bot .bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top-left-radius: 5px;
+    color: var(--text);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .message.user .bubble {
+    background: var(--user-bg);
+    border: 1px solid var(--user-border);
+    border-top-right-radius: 5px;
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(155,132,200,0.12);
+  }
+
+  /* Typing indicator */
+  .typing-bubble {
+    padding: 16px 20px;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .typing-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--sage-light);
+    border-radius: 50%;
+    animation: dotBounce 1.4s infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Input area */
+  .input-section {
+    position: relative;
+    z-index: 10;
+    padding: 18px 24px 22px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  .quick-replies {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .quick-replies::-webkit-scrollbar { display: none; }
+
+  .quick-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 12px;
+    color: var(--text-mid);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  .quick-btn:hover {
+    border-color: var(--sage);
+    color: var(--sage-dark);
+    background: rgba(122,158,135,0.08);
+  }
+
+  .input-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 11px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 11px 14px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .input-box:focus-within {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12);
+  }
+
+  #userInput {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+    resize: none;
+    max-height: 130px;
+    min-height: 22px;
+  }
+
+  #userInput::placeholder { color: var(--text-muted); }
+
+  #sendBtn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.22s;
+    box-shadow: 0 3px 12px rgba(122,158,135,0.35);
+  }
+
+  #sendBtn:hover { transform: scale(1.06); box-shadow: 0 5px 18px rgba(122,158,135,0.45); }
+  #sendBtn:active { transform: scale(0.96); }
+  #sendBtn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  #sendBtn svg { width: 16px; height: 16px; fill: white; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    letter-spacing: 0.03em;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .error-note {
+    font-size: 12px;
+    color: #c0645a;
+    padding: 8px 12px;
+    background: rgba(192,100,90,0.08);
+    border: 1px solid rgba(192,100,90,0.2);
+    border-radius: 10px;
+    margin-top: 8px;
+    display: none;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Disclaimer popup */
+  .disclaimer {
+    position: fixed;
+    inset: 0;
+    background: rgba(58,51,48,0.45);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  .disclaimer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 36px 40px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(58,51,48,0.2);
+    animation: cardUp 0.35s ease;
+  }
+
+  @keyframes cardUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .disclaimer-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--sage-light), var(--sage));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    box-shadow: 0 6px 20px rgba(122,158,135,0.3);
+  }
+
+  .disclaimer-icon svg { width: 26px; height: 26px; fill: white; }
+
+  .disclaimer-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .disclaimer-card p {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .disclaimer-card .crisis-link {
+    display: block;
+    background: rgba(122,158,135,0.1);
+    border: 1px solid rgba(122,158,135,0.3);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--sage-dark);
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .agree-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.22s;
+    box-shadow: 0 5px 18px rgba(122,158,135,0.4);
+  }
+
+  .agree-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(122,158,135,0.5); }
+</style>
+</head>
+<body>
+
+<!-- Disclaimer Modal -->
+<div class="disclaimer" id="disclaimer">
+  <div class="disclaimer-card">
+    <div class="disclaimer-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <h2>You're not alone</h2>
+    <p>Serenity is an AI companion designed to offer a compassionate space to talk. It is <strong>not</strong> a substitute for professional mental health care.</p>
+    <div class="crisis-link">🆘 In crisis? Call or text <strong>988</strong> (Suicide & Crisis Lifeline)</div>
+    <button class="agree-btn" onclick="closeDisclaimer()">I Understand — Let's Talk</button>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="brand-text">
+      <div class="name">Serenity</div>
+      <div class="tagline">Mental Health Support</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="online-badge">
+      <div class="online-dot"></div>
+      Here for you
+    </div>
+  </div>
+</header>
+
+<div class="crisis-bar">
+  If you're in crisis, please call or text <a href="tel:988">988</a> immediately &nbsp;·&nbsp; International: <a href="https://www.findahelpline.com" target="_blank">findahelpline.com</a>
+</div>
+
+<div class="messages-wrap" id="messagesWrap">
+  <div class="welcome" id="welcomeState">
+    <div class="welcome-bloom">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <h1>How are you feeling today?</h1>
+    <p>This is a safe, non-judgmental space. Share what's on your mind — I'm here to listen, reflect, and support you.</p>
+    <div class="mood-row">
+      <div class="mood-chip" onclick="sendQuick('I\'m feeling anxious and overwhelmed')">😟 Anxious</div>
+      <div class="mood-chip" onclick="sendQuick('I\'ve been feeling really sad lately')">😔 Sad</div>
+      <div class="mood-chip" onclick="sendQuick('I\'m feeling stressed about work or life')">😤 Stressed</div>
+      <div class="mood-chip" onclick="sendQuick('I feel lonely and disconnected')">🥺 Lonely</div>
+      <div class="mood-chip" onclick="sendQuick('I just want someone to talk to')">💬 Need to talk</div>
+      <div class="mood-chip" onclick="sendQuick('I\'m having trouble sleeping')">😴 Can\'t sleep</div>
+    </div>
+  </div>
+</div>
+
+<div class="input-section">
+  <div class="quick-replies" id="quickReplies" style="display:none;">
+    <button class="quick-btn" onclick="sendQuick('Tell me more about that technique')">Tell me more</button>
+    <button class="quick-btn" onclick="sendQuick('I\'d like to try a breathing exercise')">Breathing exercise</button>
+    <button class="quick-btn" onclick="sendQuick('Can you guide me through a grounding exercise?')">Grounding exercise</button>
+    <button class="quick-btn" onclick="sendQuick('I need some coping strategies')">Coping strategies</button>
+    <button class="quick-btn" onclick="sendQuick('I want to talk about my feelings more')">Talk more</button>
+  </div>
+  <div class="input-box">
+    <textarea id="userInput" rows="1" placeholder="Share what's on your mind…" maxlength="2000"></textarea>
+    <button id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="footer-note">Serenity is an AI support companion, not a licensed therapist. For emergencies, call 988 or 911.</div>
+  <div class="error-note" id="errorNote"></div>
+</div>
+
+<script>
+  const messagesWrap = document.getElementById('messagesWrap');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const errorNote = document.getElementById('errorNote');
+  const quickReplies = document.getElementById('quickReplies');
+  const history = [];
+  let started = false;
+
+  function closeDisclaimer() {
+    document.getElementById('disclaimer').style.display = 'none';
+    userInput.focus();
+  }
+
+  userInput.addEventListener('input', () => {
+    userInput.style.height = 'auto';
+    userInput.style.height = Math.min(userInput.scrollHeight, 130) + 'px';
+  });
+
+  userInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  function sendQuick(text) {
+    userInput.value = text;
+    sendMessage();
+  }
+
+  function removeWelcome() {
+    const w = document.getElementById('welcomeState');
+    if (w) w.remove();
+  }
+
+  function appendMessage(role, text) {
+    removeWelcome();
+    if (!started) { started = true; quickReplies.style.display = 'flex'; }
+
+    const wrap = document.createElement('div');
+    wrap.className = `message ${role}`;
+
+    const av = document.createElement('div');
+    av.className = `avatar ${role}`;
+    if (role === 'bot') {
+      av.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+    } else {
+      av.textContent = 'You';
+      av.style.fontSize = '10px';
+      av.style.letterSpacing = '0.05em';
+    }
+
+    const bWrap = document.createElement('div');
+    bWrap.className = 'bubble-wrap';
+
+    const label = document.createElement('div');
+    label.className = 'sender-label';
+    label.textContent = role === 'bot' ? 'Serenity' : 'You';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.style.whiteSpace = 'pre-wrap';
+    bubble.textContent = text;
+
+    bWrap.appendChild(label);
+    bWrap.appendChild(bubble);
+    wrap.appendChild(av);
+    wrap.appendChild(bWrap);
+    messagesWrap.appendChild(wrap);
+    messagesWrap.scrollTop = messagesWrap.scrollHeight;
+    return bubble;
+  }
+
+  function showTyping() {
+    removeWelcome();
+    const wrap = document.createElement('div');
+    wrap.className = 'message bot';
+    wrap.id = 'typingIndicator';
+
+    const av = document.createElement('div');
+    av.className = 'avatar bot';
+    av.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+
+    const bWrap = document.createElement('div');
+    bWrap.className = 'bubble-wrap';
+
+    const label = document.createElement('div');
+    label.className = 'sender-label';
+    label.textContent = 'Serenity';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble typing-bubble';
+    bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+    bWrap.appendChild(label);
+    bWrap.appendChild(bubble);
+    wrap.appendChild(av);
+    wrap.appendChild(bWrap);
+    messagesWrap.appendChild(wrap);
+    messagesWrap.scrollTop = messagesWrap.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    errorNote.style.display = 'none';
+    userInput.value = '';
+    userInput.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    appendMessage('user', text);
+    history.push({ role: 'user', content: text });
+    showTyping();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `You are Serenity, a compassionate AI mental health support companion. Your role is to:
+
+- Listen with empathy and without judgment
+- Validate feelings and reflect them back
+- Offer gentle coping strategies (breathing exercises, grounding techniques, journaling prompts)
+- Encourage professional help when appropriate, but gently — not dismissively
+- Never diagnose or prescribe
+- Be warm, patient, and human in tone
+- Use short, digestible paragraphs
+- If someone expresses suicidal thoughts or self-harm, always provide the crisis line: call/text 988 immediately and encourage them to reach out
+- Do NOT use any markdown formatting — plain text only
+- Speak like a caring friend who has deep knowledge, not a clinical professional`,
+          messages: history
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Something went wrong');
+
+      const reply = data.content?.[0]?.text || "I'm here. Take your time.";
+      removeTyping();
+      appendMessage('bot', reply);
+      history.push({ role: 'assistant', content: reply });
+
+    } catch (err) {
+      removeTyping();
+      errorNote.textContent = '⚠ ' + (err.message || 'Could not connect. Please try again.');
+      errorNote.style.display = 'block';
+      history.pop();
+    }
+
+    sendBtn.disabled = false;
+    userInput.focus();
+  }
+</script>
+</body>
+</html>
